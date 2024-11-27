@@ -1,0 +1,131 @@
+---
+title: "RWorksheet_5a"
+author: "Jalando-on, Nandin, Palabrica"
+date: "2024-11-27"
+output: pdf_document
+latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Extracting Amazon Product Reviews**
+
+4. Select 5 categories from Amazon and select 30 products from each category.
+```{r}
+library(polite)
+library(kableExtra)
+library(rmarkdown)
+library(httr)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+```
+
+```{r}
+urls <- c('https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A172635&ref=nav_em__nav_desktop_sa_intl_printers_0_2_6_11', 'https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A3011391011&ref=nav_em__nav_desktop_sa_intl_laptop_accessories_0_2_6_7', 'https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A193870011&ref=nav_em__nav_desktop_sa_intl_computer_components_0_2_6_3', 'https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A11036071&ref=nav_em__nav_desktop_sa_intl_servers_0_2_6_13', 'https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A1292115011&ref=nav_em__nav_desktop_sa_intl_monitors_0_2_6_8')
+
+ProductName <- vector("list", length(urls))
+price <- vector("list", length(urls))
+description <- vector("list", length(urls))
+Ratings <- vector("list", length(urls))
+Reviews <- vector("list", length(urls))
+```
+
+
+```{r}
+df <- list()
+
+ for (i in seq_along(urls)) {
+   session <- bow(urls[i], user_agent = "Educational")
+   webpage <- scrape(session)
+   
+ProductName[[i]] <- webpage %>%
+  html_nodes('.a-size-base-plus.a-color-base.a-text-normal') %>%
+  html_text() %>%
+  head(30)
+
+price[[i]] <- webpage %>%
+  html_nodes('.a-price-whole') %>%
+  html_text() %>%
+  head(30)
+
+
+Ratings[[i]] <- webpage %>%
+  html_nodes('.a-icon.a-icon-star-small.a-star-small-4 ') %>%
+  html_text() %>%
+  head(30)
+
+
+Reviews[[i]] <-  webpage %>%
+  html_nodes('.a-size-base.s-underline-text') %>%
+  html_text() %>%
+  head(30)
+}
+```
+5. Extract the price, description, ratings and reviews of each product.
+```{r}
+ProductName
+```
+
+```{r}
+printer <- data.frame(ProductName[[1]],
+                      price = price[[1]],
+                      Ratings = Ratings[[1]],
+                      stringsAsFactors = FALSE
+                      ) 
+head(printer, 30)
+printer %>% 
+  kable("latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
+```{r}
+laptopAccessories <- data.frame(ProductName[[2]],
+                      Price = price[[2]],
+                      Ratings = Ratings[[2]],
+                      stringsAsFactors = FALSE
+                      ) 
+head(laptopAccessories, 30)
+
+laptopAccessories %>% 
+  kable("latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+```
+
+comp <- data.frame(ProductName[[3]],
+                      price = price[[3]],
+                      Ratings = Ratings[[3]],
+                      stringsAsFactors = FALSE
+                      ) 
+head(comp, 20)
+comp %>% 
+  kable("latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+
+
+Servers <- data.frame(ProductName[[4]],
+                      Price = price[[4]],
+                      Ratings = ratings[[4]],
+                      stringsAsFactors = FALSE
+                      ) 
+head(Servers, 30)
+Servers %>% 
+  kable("latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+
+Monitors <- data.frame(ProductName[[1]],
+                      Price = price[[1]],
+                      Ratings = ratings[[1]],
+                      stringsAsFactors = FALSE
+                      ) 
+head(Monitors, 50)
+Monitors %>% 
+  kable("latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down")
+
+
+
+
