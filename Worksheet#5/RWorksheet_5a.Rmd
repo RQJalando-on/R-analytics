@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 IMDB
 
 ```{r}
-library(rvest)use
+library(rvest)
 library(dplyr)
 library(stringr)
 library(polite)
@@ -29,8 +29,8 @@ session <- bow(link, user_agent = "Educational")
 ```
 
 ```{r}
-nam <- page %>% html_nodes(".ipc-title__text") %>% html_text()
-name <- nam[!grepl("Top 250 TV Shows|IMDb Charts|Recently viewed|More to explore", nam, ignore.case = TRUE)]
+name <- page %>% html_nodes('.ipc-title__text') %>% html_text()
+name <- name[!grepl("Top 250 TV Shows|IMDb Charts|Recently viewed|More to explore", name, ignore.case = TRUE)]
 name
 ```
 ```{r}
@@ -98,13 +98,20 @@ urls <- c("https://www.imdb.com/title/tt0903747/?ref_=chttvtp_i_1",
 
 user_reviews <- vector("numeric", length(urls))
 critic_reviews <- vector("numeric", length(urls))
+popularity <- vector("numeric", length(urls))
+
+
 for (i in seq_along(urls)) {
 
   session <- bow(urls[i], user_agent = "Educational")
 
   webpage <- scrape(session)
-
+  
+  popularity_text <- webpage %>% html_nodes(".sc-39d285cf-1.dxqvqi") %>% html_text()
+  popularity[i] <- as.numeric(gsub(",", "", popularity_text[1]))
+  
   reviewz <- webpage %>% html_nodes(".score") %>% html_text()
+  
 
   if (length(reviewz) >= 2) {
 
@@ -117,6 +124,7 @@ for (i in seq_along(urls)) {
     critic_reviews[i] <- NA
   }
 }
+  
 ```
 
 
@@ -158,31 +166,25 @@ reviews
 
 ```
 ```{r}
-date <- page2 %>% html_nodes(".ipc-inline-list__item.review-date") %>%  
+date <- page2 %>% html_nodes(".sc-300a8231-7.eaXxft.cli-title-metadata-item") %>%  
   html_text()
 date 
 
 ```
 ```{r}
-user_rating <- page2 %>% html_nodes(".sc-a2ac93e5-4.gyibOi") %>%  
+user_rating <- page2 %>% html_nodes(".cli-ratings-container") %>%  
   html_text()
 user_rating
 ```
 
-
 ```{r}
-link1 = "https://www.imdb.com/chart/toptv/"
-page1 = read_html(link)
-session1 <- bow(link1, user_agent = "Educational") 
-        session1
-```
-
-```{r}
-user_review = page %>% html_nodes(".score") %>% html_text()
+user_review = page %>% html_nodes(".ipc-btn__review") %>% 
+  html_text()
 user_review
 ```
 ```{r}
 library(ggplot2)
+library(dplyr)
 
 movies$year <- as.numeric(movies$year)
 year_counts <- movies %>%
@@ -190,12 +192,13 @@ year_counts <- movies %>%
   count(year)
 
 ggplot(year_counts, aes(x = year, y = n)) +
-  geom_line(color = "blue") +
-  geom_point(color = "red") +
+  geom_line(color = "blue", size = 1) +
+  geom_point(color = "red", size = 2) +
   labs(title = "Number of TV Shows Released by Year",
        x = "Year",
        y = "Number of TV Shows") +
   theme_minimal()
+  theme(plot.title = element_text(hjust = 0.5, size = 14))
 
 most_releases <- year_counts[which.max(year_counts$n), ]
 print(most_releases)
@@ -317,9 +320,9 @@ head(Monitors, 50)
 Monitors %>% 
   kable("latex", booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
-<<<<<<< HEAD
+
 ```
-sample commit because hindi ka push si Coolen 
+ttext
 
 
 
