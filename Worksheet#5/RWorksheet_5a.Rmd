@@ -94,7 +94,7 @@ laptopAccessories %>%
   kable("latex", booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
 ```
-
+```{r}
 comp <- data.frame(ProductName[[3]],
                       price = price[[3]],
                       Ratings = Ratings[[3]],
@@ -125,6 +125,10 @@ head(Monitors, 50)
 Monitors %>% 
   kable("latex", booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
+```
+sample commint
+
+
 
 
 
