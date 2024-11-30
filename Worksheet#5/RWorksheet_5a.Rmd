@@ -126,7 +126,7 @@ Monitors %>%
   kable("latex", booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
 ```
-sample commint
+sample commit because hindi ka push si Coolen 
 
 
 
