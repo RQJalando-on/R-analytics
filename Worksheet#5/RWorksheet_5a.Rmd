@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 IMDB
 
 ```{r}
-library(rvest)
+library(rvest)use
 library(dplyr)
 library(stringr)
 library(polite)
