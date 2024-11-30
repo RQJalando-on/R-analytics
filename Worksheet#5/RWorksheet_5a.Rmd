@@ -319,7 +319,6 @@ Monitors %>%
   kable_styling(latex_options = "scale_down")
 }
 
-usethis::use_git_config(user.name="RQJalando-on
-", user.email=" ralynqueen.jalando-on@students.isatu.edu.ph")
+u
 
 
