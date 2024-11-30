@@ -312,13 +312,13 @@ Monitors <- data.frame(ProductName[[1]],
                       Price = price[[1]],
                       Ratings = ratings[[1]],
                       stringsAsFactors = FALSE
-                      ) 
+                      )
 head(Monitors, 50)
 Monitors %>% 
   kable("latex", booktabs = TRUE) %>%
   kable_styling(latex_options = "scale_down")
 }
 
-h
+
 
 
