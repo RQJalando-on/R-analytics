@@ -95,7 +95,10 @@ urls <- c("https://www.imdb.com/title/tt0903747/?ref_=chttvtp_i_1",
           "https://www.imdb.com/title/tt2560140/?ref_=chttvtp_i_23",
           "https://www.imdb.com/title/tt0103359/?ref_=chttvtp_i_24",
           "https://www.imdb.com/title/tt0386676/?ref_=chttvtp_i_25")
+```
 
+
+```{r}
 user_reviews <- vector("numeric", length(urls))
 critic_reviews <- vector("numeric", length(urls))
 popularity <- vector("numeric", length(urls))
@@ -192,8 +195,8 @@ year_counts <- movies %>%
   count(year)
 
 ggplot(year_counts, aes(x = year, y = n)) +
-  geom_line(color = "blue", size = 1) +
-  geom_point(color = "red", size = 2) +
+  geom_line(color = "pink", size = 1) +
+  geom_point(color = "maroon", size = 2) +
   labs(title = "Number of TV Shows Released by Year",
        x = "Year",
        y = "Number of TV Shows") +
@@ -203,7 +206,7 @@ ggplot(year_counts, aes(x = year, y = n)) +
 most_releases <- year_counts[which.max(year_counts$n), ]
 print(most_releases)
 ```
-
+**AMAZON**
 
 **Extracting Amazon Product Reviews**
 
@@ -322,7 +325,7 @@ Monitors %>%
   kable_styling(latex_options = "scale_down")
 
 ```
-ttext
+ttextkk
 
 
 
