@@ -10,7 +10,8 @@ latex_engine: xelatex
 knitr::opts_chunk$set(echo = TRUE)
 
 ```
-IMDB
+
+MDB
 
 ```{r}
 library(rvest)
@@ -187,8 +188,8 @@ year_counts <- movies %>%
   count(year)
 
 ggplot(year_counts, aes(x = year, y = n)) +
-  geom_line(color = "blue") +
-  geom_point(color = "red") +
+  geom_line(color = "pink") +
+  geom_point(color = "maroon") +
   labs(title = "Number of TV Shows Released by Year",
        x = "Year",
        y = "Number of TV Shows") +
@@ -197,3 +198,4 @@ ggplot(year_counts, aes(x = year, y = n)) +
 most_releases <- year_counts[which.max(year_counts$n), ]
 print(most_releases)
 ```
+h
