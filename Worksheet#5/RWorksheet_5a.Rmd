@@ -45,11 +45,10 @@ title
 
 
 ```{r}
-yea = page %>% html_nodes(".sc-5bc66c50-6.OOdsw.cli-title-metadata-item") %>% html_text()
-year <- str_extract_all(yea, "\\b\\d{4}(?:–\\d{4})?\\b") %>% unlist()
+yea = page %>% html_nodes(".cli-title-metadata-item") %>% html_text()
+year <- str_extract_all(yea, "\\b\\d{4}\\b") %>% unlist()
 year
 ```
-
 
 ```{r}
 rating = page %>% html_nodes(".ipc-rating-star--rating") %>% html_text()
@@ -58,9 +57,8 @@ rating
 
 
 ```{r}
-episode <- page %>% html_nodes(".sc-5bc66c50-6.OOdsw.cli-title-metadata-item") %>%
-html_text()
-episodes <- str_extract_all(episode, "\\b\\d+ eps\\b") %>% unlist()
+episode <- page %>% html_nodes(".cli-title-metadata-item") %>% html_text()
+episodes <- str_extract_all(episode, "\\d+\\s*eps?\\b") %>% unlist()
 episodes
 ```
 
