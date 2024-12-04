@@ -198,3 +198,138 @@ ggplot(year_counts, aes(x = year, y = n)) +
 most_releases <- year_counts[which.max(year_counts$n), ]
 print(most_releases)
 ```
+
+AMAZON
+
+```{r}
+library(rvest)
+library(httr)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+#4. URLs
+urls <- c('https://www.amazon.com/s?k=men%27s+clothing', 
+          'https://www.amazon.com/s?k=men+shoes',
+          'https://www.amazon.com/s?k=women+jewelry',
+          'https://www.amazon.com/s?k=baby+gifts',
+          'https://www.amazon.com/s?k=women+accessories')
+```
+
+```{r}
+#5
+df <- list()
+
+for (i in seq_along(urls)) {
+  # Read the HTML content of the page
+  page <- read_html(urls[i])
+  
+  product_name <- page %>%
+    html_nodes('h2.a-size-mini') %>% 
+    html_text(trim = TRUE) %>%
+    head(30) 
+  
+  product_description <- page %>%
+    html_nodes('div.productDescription') %>% 
+    html_text(trim = TRUE) %>%
+    head(30) 
+  
+  product_rating <- page %>%
+    html_nodes('span.a-icon-alt') %>% 
+    html_text(trim = TRUE) %>%
+    head(30)  
+  ratings <- as.numeric(str_extract(product_rating, "\\d+\\.\\d"))
+  
+  product_price <- page %>%
+    html_nodes('span.a-price') %>% 
+    html_text(trim = TRUE) %>%
+    head(30) 
+  price <- as.numeric(str_extract(product_price, "\\d+\\.\\d+"))
+  
+  product_review <- page %>%
+    html_nodes('div.review-text-content') %>% 
+    html_text(trim = TRUE) %>%
+    head(30)  
+  
+  dfTemp <- data.frame(Product_Name = product_name[1:30],
+                       Description = product_description[1:30],
+                       Rating = ratings[1:30],
+                       Price = price[1:30],
+                       stringsAsFactors = FALSE)
+  
+  df[[i]] <- dfTemp
+}
+```
+
+#6. 
+#The code extracts data from Amazon product listing pages based on different search queries, such as "men's clothing," "men shoes," "women jewelry," "baby gifts," and "women accessories." For each URL, the following information is extracted: Product Name along with its description(if available), Rating, and Price.
+
+#7
+#This data can be used to compare product popularity, analyze price trends, examine the relationship between price and quality, and conduct market research to inform new product development in each category.
+
+```{r}
+#8
+combined_df <- do.call(rbind, df)
+combined_df$Category <- rep(c("Men's Clothing", "Men's Shoes", "Women's Jewelry", "Baby Gifts", "Women's Accessories"), each = 30)
+
+avg_rating <- combined_df %>%
+  group_by(Category) %>%
+  summarize(Average_Rating = mean(Rating, na.rm = TRUE))
+
+ggplot(avg_rating, aes(x = Category, y = Average_Rating, fill = Category)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Rating per Category", x = "Category", y = "Average Rating") +
+  theme_minimal()
+
+avg_price <- combined_df %>%
+  group_by(Category) %>%
+  summarize(Average_Price = mean(Price, na.rm = TRUE))
+
+ggplot(avg_price, aes(x = Category, y = Average_Price, fill = Category)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Price per Category", x = "Category", y = "Average Price") +
+  theme_minimal()
+
+ggplot(combined_df, aes(x = Price, y = Rating, color = Category)) +
+  geom_point() +
+  labs(title = "Price vs Rating Across Categories", x = "Price", y = "Rating") +
+  theme_minimal()
+```
+
+```{r}
+#9
+ggplot(combined_df, aes(x = Category, y = Rating, fill = Category)) +
+  geom_boxplot() +
+  labs(title = "Distribution of Ratings by Category", x = "Category", y = "Rating") +
+  theme_minimal()
+
+ggplot(combined_df, aes(x = Category, y = Price, fill = Category)) +
+  geom_boxplot() +
+  labs(title = "Distribution of Prices by Category", x = "Category", y = "Price") +
+  theme_minimal()
+```
+
+```{r}
+#10
+ranked_data <- lapply(df, function(df_category) {
+  df_category %>%
+    arrange(desc(Rating), Price) %>%
+    mutate(Rank = row_number()) %>%
+    select(Rank, everything()) 
+})
+
+categories <- c("Men's Clothing", "Men's Shoes", "Women's Jewelry", "Baby Gifts", "Women's Accessories")
+for (i in seq_along(ranked_data)) {
+  ranked_data[[i]]$Category <- categories[i]
+}
+
+ranked_combined_df <- do.call(rbind, ranked_data)
+ranked_combined_df <- ranked_combined_df %>% 
+  arrange(Category, Rank) %>% 
+  group_by(Category) %>% 
+  slice(1:5) 
+
+print(ranked_combined_df)
+```
