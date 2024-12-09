@@ -1,0 +1,39 @@
+---
+title: "Worksheet#5b"
+author: "Jalando-on, Nandin, Palabrica"
+date: "2024-12-09"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(polite)
+library(kableExtra)
+library(httr)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(rmarkdown)
+```
+
+```{r}
+urlCateg1 <- c('https://www.amazon.com/s?k=men%27s+clothing')
+
+ProductName <- vector("list", length(urlCateg1))
+Names <- vector("list", length(urlCateg1))
+Ratings <- vector("list", length(urlCateg1))
+Dates <- vector("list", length(urlCateg1))
+Title <- vector("list", length(urlCateg1))
+Text <- vector("list", length(urlCateg1))
+n <- vector("list", length(urlCateg1))
+
+```
+
+```{r}
+
+```
+
