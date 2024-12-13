@@ -19,21 +19,167 @@ library(stringr)
 library(ggplot2)
 library(rmarkdown)
 ```
+```{r}
+urls <- c('https://www.amazon.com/Hanes-Pullover-EcoSmart-Fleece-Hoodie/dp/B00JUM2VAQ/ref=sr_1_11?dib=eyJ2IjoiMSJ9.Y9pNm34IiiXlX7v3xA7IzWchMfcF2I5cQS8bSnGRZqyPRKu1DXkD4o2hbPq-M0w-vN_56PFct_fo6xr5uhhy9F9TTs-Hm0lYuKMzD2gYkelU-ikLuQ9U__oPq0gjX3wsuFEi2VPVXhheG4sAaq0-De1RHaoHyip6DdUp4KBZ7rkzFCdDy6R4FEotruS_M-qdQNa9AvjGBzLTaM-cVQ2AD5UiZ685qFlYTKqPp5TyPlMQdC_yGqld-EzIWk8FwNuGcvMZCJUjYWuO_CwVnN75Qbry3QorcZ6xpUCL49ErPblYq-W-pwf8plr9VsgRRQHeHLfDz5YkkVuars-in8jbr7xSrnyLrh7zCiSMr_lxzGanXjGOg49qUURK9St9BBf81_Bda7lk7-piJ7cLJUdHDqUghkJ5p4P74Ye9ZDAvjXR_-CTsuVOWXw79lYTveWgA.LV-E8_jaE11qSVwoEXYQONbGR-N_H0N1I-ll4BiyWPQ&dib_tag=se&qid=1734070003&s=fashion-mens-intl-ship&sr=1-11', 
+          'https://www.amazon.com/PURE-CHAMP-Athletic-Sweatpants-Drawstring/dp/B09ZD82V6S/ref=sr_1_36?crid=1ED3FXYOTXS53&dib=eyJ2IjoiMSJ9.9sZWlcTUNrnm7wCF4E8lUKpwcZRGT6b_JTi4_TB0zSsfph44m-r4hoQ1dL23hOBZDL3ymXLBkpLcCw_GF_eN3eWvW0yBUxTUtTExcYEZ0OvjZCKidlJtgjirsO3rQ0jsJ_EFLqQCLsPq0I5UAmPQuRjt3Mj_eKkfpmYx86TYK5d2ap_wNgaAWxRdMMTbWHEP67C0psyDTufmLZhZodIXULI-zLjJwh2UNSsUa67iGK08ywyCYzJq6m10z7rlVlgRWepBy-b3fLnOhdZyfbSW1VQ5oVkLSOAL4tF7qCl7-TRJlMcZQq-Agan-SxlxfIIqC4qO_32mhFDLkMnMfSnF1Vxt8D4qQT-IYoGMVYlms2bE3oX193Ap7kFfRXIW4bb9dRFdAeH_9OhadkVEZ5N6lMZp4-Qqmgw0x2-m_sAdw4Ps2IQ3N0Ddavb5l_Joo-L1.VuXwC3L8rvEitHJad-lbmlOISJxlFNazkKuPxb2DZHM&dib_tag=se&keywords=mens+clothing&qid=1734071544&sprefix=mens+clothi%2Caps%2C327&sr=8-36', 
+'https://www.amazon.com/Wrangler-Authentics-Sweater-Quarter-Zip-Heather/dp/B01L0KQTIK/ref=sr_1_4?crid=1ED3FXYOTXS53&dib=eyJ2IjoiMSJ9.9sZWlcTUNrnm7wCF4E8lUKpwcZRGT6b_JTi4_TB0zSsfph44m-r4hoQ1dL23hOBZDL3ymXLBkpLcCw_GF_eN3eWvW0yBUxTUtTExcYEZ0OvjZCKidlJtgjirsO3rQ0jsJ_EFLqQCLsPq0I5UAmPQuRjt3Mj_eKkfpmYx86TYK5d2ap_wNgaAWxRdMMTbWHEP4Qe5ZKBIZksSw9YRI60e3KtbD4JlIY13fHiAIhbMufM8ywyCYzJq6m10z7rlVlgRWepBy-b3fLnOhdZyfbSW1VQ5oVkLSOAL4tF7qCl7-TRJlMcZQq-Agan-SxlxfIIqdJpvq2Nxe7di-hyA3zDGvPE1sWwzlJ6CJ-LTjpC7C5gZ3L5S1CwnzER0SRnbDW-mdRFdAeH_9OhadkVEZ5N6lMZp4-Qqmgw0x2-m_sAdw4Ps2IQ3N0Ddavb5l_Joo-L1.K4hFE7Z8m63La0m2D94e2l55ZRXglObZ1gdm2qhMR7E&dib_tag=se&keywords=mens+clothing&qid=1734070503&sprefix=mens+clothi%2Caps%2C327&sr=8-4',
+ 'https://www.amazon.com/Hanes-T-Shirt-Moisture-Wicking-Crewneck-Heather/dp/B0D2PKQGQV/ref=sr_1_39?crid=1ED3FXYOTXS53&dib=eyJ2IjoiMSJ9.9sZWlcTUNrnm7wCF4E8lUKpwcZRGT6b_JTi4_TB0zSsfph44m-r4hoQ1dL23hOBZDL3ymXLBkpLcCw_GF_eN3eWvW0yBUxTUtTExcYEZ0OvjZCKidlJtgjirsO3rQ0jsJ_EFLqQCLsPq0I5UAmPQuRjt3Mj_eKkfpmYx86TYK5d2ap_wNgaAWxRdMMTbWHEP67C0psyDTufmLZhZodIXULI-zLjJwh2UNSsUa67iGK08ywyCYzJq6m10z7rlVlgRWepBy-b3fLnOhdZyfbSW1VQ5oVkLSOAL4tF7qCl7-TRJlMcZQq-Agan-SxlxfIIqC4qO_32mhFDLkMnMfSnF1Vxt8D4qQT-IYoGMVYlms2bE3oX193Ap7kFfRXIW4bb9dRFdAeH_9OhadkVEZ5N6lMZp4-Qqmgw0x2-m_sAdw4Ps2IQ3N0Ddavb5l_Joo-L1.VuXwC3L8rvEitHJad-lbmlOISJxlFNazkKuPxb2DZHM&dib_tag=se&keywords=mens+clothing&qid=1734071544&sprefix=mens+clothi%2Caps%2C327&sr=8-39', 
+'https://www.amazon.com/THWEI-Joggers-Athletic-Straight-Sweatpants/dp/B0BRKF45J7/ref=sr_1_31?crid=1ED3FXYOTXS53&dib=eyJ2IjoiMSJ9.9sZWlcTUNrnm7wCF4E8lUKpwcZRGT6b_JTi4_TB0zSsfph44m-r4hoQ1dL23hOBZDL3ymXLBkpLcCw_GF_eN3eWvW0yBUxTUtTExcYEZ0OvjZCKidlJtgjirsO3rQ0jsJ_EFLqQCLsPq0I5UAmPQuRjt3Mj_eKkfpmYx86TYK5d2ap_wNgaAWxRdMMTbWHEP67C0psyDTufmLZhZodIXULI-zLjJwh2UNSsUa67iGK08ywyCYzJq6m10z7rlVlgRWepBy-b3fLnOhdZyfbSW1VQ5oVkLSOAL4tF7qCl7-TRJlMcZQq-Agan-SxlxfIIqC4qO_32mhFDLkMnMfSnF1Vxt8D4qQT-IYoGMVYlms2bE3oX193Ap7kFfRXIW4bb9dRFdAeH_9OhadkVEZ5N6lMZp4-Qqmgw0x2-m_sAdw4Ps2IQ3N0Ddavb5l_Joo-L1.VuXwC3L8rvEitHJad-lbmlOISJxlFNazkKuPxb2DZHM&dib_tag=se&keywords=mens+clothing&qid=1734071544&sprefix=mens+clothi%2Caps%2C327&sr=8-31')
+```
 
 ```{r}
-urlCateg1 <- c('https://www.amazon.com/s?k=men%27s+clothing')
 
-ProductName <- vector("list", length(urlCateg1))
-Names <- vector("list", length(urlCateg1))
-Ratings <- vector("list", length(urlCateg1))
-Dates <- vector("list", length(urlCateg1))
-Title <- vector("list", length(urlCateg1))
-Text <- vector("list", length(urlCateg1))
-n <- vector("list", length(urlCateg1))
+ProductName <- vector("list", length(urls))
+Names <- vector("list", length(urls))
+Ratings <- vector("list", length(urls))
+Dates <- vector("list", length(urls))
+Title <- vector("list", length(urls))
+Text <- vector("list", length(urls))
+n <- vector("list", length(urls))
+
+
 
 ```
 
 ```{r}
+df <- list()
+names_list <- list()  
+ProductName <- list()  
+Ratings <- list()      
+Dates <- list()       
+Title <- list()        
+text <- list()       
+
+for (i in seq_along(urls)) {
+  session <- bow(urls[i], user_agent = "Educational")
+  webpage <- scrape(session)
+  
+  nam <- webpage %>% html_nodes(".a-profile-name") %>% html_text()
+  nam <- nam[!grepl("Hanes Men's Hoodie ", nam, ignore.case = TRUE)]
+  nam <- nam[nam != ""]
+  
+  n[[i]] <- nam
+  name <- c() 
+  non_amazon_seen <- FALSE  
+  
+  for (na in nam) {
+    if (na == "Amazon Customer") {
+      if (non_amazon_seen) {
+        name <- c(name, na)
+      }
+    } else {
+      name <- c(name, na)
+      non_amazon_seen <- TRUE
+    }
+  }
+  
+  name <- name[!duplicated(name) | name == "Amazon Customer"]
+  names_list[[i]] <- name  # Use `names_list` instead of `names`
+
+  ProductName[[i]] <- webpage %>%
+    html_nodes('.a-size-large.product-title-word-break') %>%
+    html_text()
+  ProductName[[i]] <- rep(ProductName[[i]], length.out = length(names_list[[i]]))
+  
+  rate <- webpage %>% html_nodes(".a-icon-alt") %>% html_text()
+  rati <- rate[!grepl("Previous page|Next page|Previous set of slides|Next set of slides", rate, ignore.case = TRUE)]
+  rat <- gsub(" out of 5 stars", "", rati)
+  rats <- rat
+  if (length(rats) > length(name)) {
+    rats <- tail(rats, length(name)) 
+  } else if (length(rats) < length(name)) {
+    rats <- c(rats, rep(NA, length(name) - length(rats)))
+  }
+
+  Ratings[[i]] <- rats
+  
+  dat <- webpage %>% html_nodes(".a-size-base.a-color-secondary.review-date") %>% html_text()
+  date <- gsub("Reviewed.*on ", "", dat)
+  Dates[[i]] <- date
+
+  titl <- webpage %>% html_nodes(".a-size-base.review-title.a-color-base.review-title-content.a-text-bold") %>% html_text()
+  tit <- gsub("Reviewed.*on ", "", titl)
+  ti <- gsub(".*stars\\s*", "", tit)
+  t <- gsub("\\s+", " ", ti)
+  Title[[i]] <- t
+
+  tex <- webpage %>% html_nodes(".a-expander-content.reviewText.review-text-content.a-expander-partial-collapse-content") %>% html_text()
+  te <- gsub("\\n", " ", tex)
+  t <- gsub("\\s+", " ", te)
+  text[[i]] <- trimws(t)  
+}
+
+```
+
+```{r}
+cate <- c("Category 1: MEN'S CLOTHING", "Category 2", "Category 3", "Category 4", "Category 5")
+category <- vector("list", length(cate))
+for (i in seq_along(cate)) {
+    category[[i]] <- cate[i]
+}
+```
+
+```{r}
+for (i in seq_along(cate)) {
+    category[[i]] <- rep(category[[i]], length.out = length(names_list[[i]]))  # Rename names to names_list
+}
+
+```
+
+```{r}
+
+names_list <- list(rep("Name 1", 3), rep("Name 2", 4), rep("Name 3", 5), rep("Name 4", 6), rep("Name 5", 7))
+
+productnumbe <- c("Product 1", "Product 2", "Product 3", "Product 4", "Product 5", "Product 6", "Product 7", "Product 8", "Product 9", "Product 10")
+productnumber <- vector("list", length(productnumbe))
+for (i in seq_along(productnumbe)) {
+    productnumber[[i]] <- productnumbe[i]
+}
+
+urls <- c("url1", "url2", "url3", "url4", "url5")
+
+for (i in seq_along(urls)) {
+    if (i <= length(names_list)) {
+        productnumber[[i]] <- rep(productnumber[[i]], length.out = length(names_list[[i]]))  
+    }
+}
+
+
+```
+
+```{r}
+
+names_list <- list()  
+
+
+names_list <- list(c("User1", "User2", "User3"))  
+
+min_length <- min(length(category[[1]]), length(productnumber[[1]]), length(ProductName[[1]]), 
+                  length(names_list[[1]]), length(Ratings[[1]]), length(Dates[[1]]), 
+                  length(Title[[1]]), length(text[[1]]))
+
+category[[1]] <- category[[1]][1:min_length]
+productnumber[[1]] <- productnumber[[1]][1:min_length]
+ProductName[[1]] <- ProductName[[1]][1:min_length]
+names_list[[1]] <- names_list[[1]][1:min_length]
+Ratings[[1]] <- Ratings[[1]][1:min_length]
+Dates[[1]] <- Dates[[1]][1:min_length]
+Title[[1]] <- Title[[1]][1:min_length]
+text[[1]] <- text[[1]][1:min_length]
+
+cloth1 <- data.frame(
+  Category = category[[1]],
+  Product_number = productnumber[[1]],
+  Name_of_Product = ProductName[[1]],
+  Username = names_list[[1]],  
+  Rating = Ratings[[1]],
+  Date = Dates[[1]],
+  Title_of_Review = Title[[1]],
+  Text_of_Review = text[[1]],
+  stringsAsFactors = FALSE
+)
+
+head(cloth1, 50)
 
 ```
 
